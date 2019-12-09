@@ -2,9 +2,11 @@ name: CI
 
 on:
   push:
-    branches:    
-      - master 
-
+    branches:
+      - master
+    paths-ignore:
+      - '**/titanic_ml_comparision.ipynb'
+      - 'data/**'
 jobs:
   build:
     runs-on: ubuntu-latest
