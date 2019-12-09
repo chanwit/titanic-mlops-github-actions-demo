@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches:    
+      - master 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out
+      uses: actions/checkout@v1
+
+    - name: Build, tag and push
+      uses: azure/docker-login@v1
+      with:
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build -t chanwit/titanic-mlops-base:${{ github.sha }} .
+        docker push chanwit/titanic-mlops-base:${{ github.sha }}
+        docker tag chanwit/titanic-mlops-base:${{ github.sha }} chanwit/titanic-mlops-base:latest
+        docker push chanwit/titanic-mlops-base:latest
