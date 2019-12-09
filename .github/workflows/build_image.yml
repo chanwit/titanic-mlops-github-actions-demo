@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths-ignore:
-      - '**/titanic_ml_comparision.ipynb'
+      - '**/*.ipynb'
       - 'data/**'
 jobs:
   build:
