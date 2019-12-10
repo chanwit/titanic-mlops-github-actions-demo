@@ -48,3 +48,11 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - uses: chanwit/action-eksctl-kale@master
+      with:
+        region: ap-southeast-1
+        cluster: eks-kubeflow
+        awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        notebook: titanic_ml_comparision.ipynb
