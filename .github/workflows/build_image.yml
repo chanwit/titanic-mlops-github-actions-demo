@@ -27,20 +27,22 @@ jobs:
 
     - name: Build, tag and push
       run: |
-        docker build -t chanwit/titanic-mlops-base:${{ github.sha }} .
-        docker push chanwit/titanic-mlops-base:${{ github.sha }}
-        docker tag chanwit/titanic-mlops-base:${{ github.sha }} chanwit/titanic-mlops-base:latest
+        docker build -t chanwit/titanic-mlops-base:${GITHUB_SHA::8} .
+        docker push chanwit/titanic-mlops-base:${GITHUB_SHA::8}
+        docker tag  chanwit/titanic-mlops-base:${GITHUB_SHA::8} chanwit/titanic-mlops-base:latest
         docker push chanwit/titanic-mlops-base:latest
 
     - name: Create changes back to Jupyter Notebook
       run: |
-        jq '.metadata.kubeflow_noteobok.docker_image="chanwit/titanic-mlops-base:${{ github.sha }}"' < titanic_ml_comparision.ipynb | sponge titanic_ml_comparision.ipynb
+        jq --arg IMAGE_NAME "chanwit/titanic-mlops-base:${GITHUB_SHA::8}" \
+          '.metadata.kubeflow_noteobok.docker_image=$IMAGE_NAME' < titanic_ml_comparision.ipynb \
+          | sponge titanic_ml_comparision.ipynb
 
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git commit -am "Update image to chanwit/titanic-mlops-base:${{ github.sha }}"
+        git commit -am "Update image to chanwit/titanic-mlops-base:${GITHUB_SHA::8}"
 
     - name: Push changes
       uses: ad-m/github-push-action@master
