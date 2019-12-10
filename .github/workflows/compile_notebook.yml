@@ -6,6 +6,9 @@ on:
       - master
     paths:
       - '*.ipynb'
+    paths-ignore:
+      - 'Dockerfile'
+      - 'requirements.txt'
 
 jobs:
   build:
