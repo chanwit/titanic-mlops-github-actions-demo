@@ -1,0 +1,24 @@
+name: PL
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**/*.ipynb'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Check out
+      uses: actions/checkout@v1
+
+    - uses: chanwit/action-eksctl-kale@master
+      with:
+        region: ap-southeast-1
+        cluster: eks-kubeflow
+        awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        notebook: titanic_ml_comparision.ipynb
