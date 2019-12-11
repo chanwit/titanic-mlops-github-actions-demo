@@ -18,7 +18,7 @@ jobs:
     - name: Check out
       uses: actions/checkout@v1
 
-    - uses: chanwit/action-eksctl-kale@master
+    - uses: chanwit/action-eksctl-kale@v1
       with:
         region: ap-southeast-1
         cluster: eks-kubeflow
