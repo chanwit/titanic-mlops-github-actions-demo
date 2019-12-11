@@ -5,10 +5,7 @@ on:
     branches:
       - master
     paths:
-      - '*.ipynb'
-    paths-ignore:
-      - 'Dockerfile'
-      - 'requirements.txt'
+      - '**/*.ipynb'
 
 jobs:
   build:
