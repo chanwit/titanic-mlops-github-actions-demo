@@ -35,8 +35,8 @@ jobs:
     - name: Create changes back to Jupyter Notebook
       run: |
         jq --arg IMAGE_NAME "chanwit/titanic-mlops-base:${GITHUB_SHA::8}" \
-          '.metadata.kubeflow_noteobok.docker_image=$IMAGE_NAME' < titanic_ml_comparision.ipynb \
-          | sponge titanic_ml_comparision.ipynb
+          '.metadata.kubeflow_noteobok.docker_image=$IMAGE_NAME' < titanic_ml_comparison.ipynb \
+          | sponge titanic_ml_comparison.ipynb
 
     - name: Commit files
       run: |
@@ -56,4 +56,4 @@ jobs:
         cluster: eks-kubeflow
         awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
         awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        notebook: titanic_ml_comparision.ipynb
+        notebook: titanic_ml_comparison.ipynb
