@@ -50,7 +50,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Run pipeline
-      uses: chanwit/action-eksctl-kale@v1
+      uses: chanwit/action-eksctl-kale@v2
       with:
         region: ap-southeast-1
         cluster: eks-kubeflow
