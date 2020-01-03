@@ -27,7 +27,7 @@ jobs:
 
     - name: Build, tag and push the base image
       run: |
-        docker build -t chanwit/titanic-mlops-base:${GITHUB_SHA::8} .
+        docker build -t chanwit/titanic-mlops-base:${GITHUB_SHA::8} -f Dockerfile.pipeline .
         docker push chanwit/titanic-mlops-base:${GITHUB_SHA::8}
         docker tag  chanwit/titanic-mlops-base:${GITHUB_SHA::8} chanwit/titanic-mlops-base:latest
         docker push chanwit/titanic-mlops-base:latest
@@ -57,3 +57,30 @@ jobs:
         awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
         awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         notebook: titanic_ml_comparison.ipynb
+
+    - name: Download the new model from S3
+      uses: chanwit/action-s3-downloader@master
+      with:
+        awsAccessKeyId: ${{ secrets.MINIO_ACCESS_KEY_ID }}
+        awsSecretAccessKey: ${{ secrets.MINIO_SECRET_ACCESS_KEY }}
+        s3Endpoint: ${{ secrets.MINIO_URL }}
+        s3BucketAndFile: /mlops-profile-titanic/model.joblib
+
+    - name: Build and push model container
+      run: |
+        #
+        # setup variables
+        #
+        export MODEL_IMAGE_NAME="chanwit/titanic-model"
+        export MODEL_IMAGE_TAG=v$(date "+%Y%m%d%H%M%S")
+        # version from file
+        export MODEL_IMAGE_VERSION=$(cat MODEL_IMAGE_VERSION)
+        #
+        # actions
+        #
+        docker build --build-arg model=model.joblib -f Dockerfile.model -t ${MODEL_IMAGE_NAME}:latest .
+        docker tag      ${MODEL_IMAGE_NAME}:latest ${MODEL_IMAGE_NAME}:${MODEL_IMAGE_TAG}
+        docker tag      ${MODEL_IMAGE_NAME}:latest ${MODEL_IMAGE_NAME}:${MODEL_IMAGE_VERSION}
+        docker push     ${MODEL_IMAGE_NAME}:${MODEL_IMAGE_TAG}
+        docker push     ${MODEL_IMAGE_NAME}:${MODEL_IMAGE_VERSION}
+        docker push     ${MODEL_IMAGE_NAME}:latest
